@@ -1,0 +1,2 @@
+# keibadb
+create keibadb
