@@ -1,0 +1,22 @@
+[project]
+name = "keibadb"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "django>=5.1.2",
+    "python-dotenv>=1.0.1",
+    "mysqlclient>=2.2.5",
+    "django-extensions>=3.2.3",
+    "djangorestframework>=3.15.2",
+    "markdown>=3.7",
+    "django-filter>=24.3",
+    "django-cors-headers>=4.5.0",
+    "requests>=2.32.3",
+    "beautifulsoup4>=4.12.3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
