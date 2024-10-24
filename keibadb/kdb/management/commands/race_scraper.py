@@ -1,20 +1,34 @@
 # -*- coding: utf8 -*-
-
-from collections import defaultdict
 import time
+from collections import defaultdict
 import csv
 import sys
 import re
 
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
+from django.core.management.base import BaseCommand
+
 
 REG = re.compile(
     "(?P<surface>.)(?P<direction>.).*(?P<distance>....)m / 天候 : (?P<weather>.+) / .+ : (?P<track_condition>.+) / 発走 : (?P<date>.....)"
 )
 
 
-def main(skip=000000000000) -> None:
+class Command(BaseCommand):
+    help = "データをスクレイピングする"
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--data_path", type=str, help="data file path", required=False
+        )
+
+    def handle(self, *args, **options):
+        data_path = options["data_path"]
+        create_race(data_path)
+
+
+def create_race(data_path="../data/") -> None:
     year_start = 2024
     year_end = 2025
     d_race_course = {
@@ -34,7 +48,7 @@ def main(skip=000000000000) -> None:
 
     for year in range(year_start, year_end):
         sub_set = set()
-        with open("./data/" + str(year) + ".csv", encoding="utf8", newline="") as fs:
+        with open(data_path + str(year) + ".csv", encoding="utf8", newline="") as fs:
             csvreader = csv.reader(fs)
             for row in csvreader:
                 sub_set.add(row[0])
@@ -43,7 +57,7 @@ def main(skip=000000000000) -> None:
                 )
 
         with open(
-            "./data/" + str(year) + ".csv", "a", newline="", encoding="UTF-8"
+            data_path + str(year) + ".csv", "a", newline="", encoding="UTF-8"
         ) as f:
             for k_race, v_race in d_race_course.items():
                 for y in range(1, 8):
@@ -57,8 +71,6 @@ def main(skip=000000000000) -> None:
                         # レース数分ループ（12R）
                         for x in range(1, 13):
                             race_id = f"{day_id}{x:02}"
-                            if int(race_id) < int(skip):
-                                continue
                             if int(race_id) < d_race_course_max[k_race]:
                                 # print(f"diffrence skip {race_id}")
                                 continue
@@ -183,12 +195,3 @@ def main(skip=000000000000) -> None:
                         if race_number <= 1:
                             break
         print("終了")
-
-
-if __name__ == "__main__":
-    args = sys.argv
-    if len(args) == 2:
-        print("resume")
-        main(skip=args[1])
-    else:
-        main()
