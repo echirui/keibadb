@@ -29,6 +29,9 @@ class Command(BaseCommand):
 
 
 def create_race(data_path="../data/") -> None:
+    header = {
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+    }
     year_start = 2024
     year_end = 2025
     d_race_course = {
@@ -72,15 +75,16 @@ def create_race(data_path="../data/") -> None:
                         for x in range(1, 13):
                             race_id = f"{day_id}{x:02}"
                             if int(race_id) < d_race_course_max[k_race]:
-                                # print(f"diffrence skip {race_id}")
+                                print(f"diffrence skip {race_id}")
                                 continue
                             if race_id in sub_set:
                                 race_number = x
                                 continue
                             url = f"https://db.netkeiba.com/race/{race_id}"
                             try:
-                                r = requests.get(url)
-                                # print(r.status_code)
+                                time.sleep(0.5)
+                                r = requests.get(url, headers=header)
+                                print(r.status_code)
                             except requests.exceptions.RequestException as e:
                                 print(f"Error: {e}")
                                 print("Retrying in 10 seconds...")

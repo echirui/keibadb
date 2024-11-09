@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from kdb.models import Horse, Jockey, Race
+from kdb.models import Horse, Jockey, Race  # type: ignore
 
 
 class HorseSerializer(ModelSerializer):

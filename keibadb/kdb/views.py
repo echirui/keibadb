@@ -13,6 +13,13 @@ class HorseViewSet(ModelViewSet):
     queryset = Horse.objects.all()
     serializer_class = HorseSerializer
 
+    def get_queryset(self):
+        """
+        queryset
+        """
+        horse_id = self.request.query_params.get("horse_id", None)
+        return Race.objects.filter(horse_id=horse_id).all()
+
 
 class JockeyViewSet(ModelViewSet):
     """
